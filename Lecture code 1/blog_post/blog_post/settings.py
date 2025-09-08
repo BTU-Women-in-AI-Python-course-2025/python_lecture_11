@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'adminsortable2',
     'nested_admin',
+    'import_export',
 
     'blog'
 ]
