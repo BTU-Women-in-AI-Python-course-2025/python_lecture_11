@@ -33,7 +33,7 @@ from django.db import models
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    order = models.PositiveIntegerField(default=0)
     
     class Meta:
         ordering = ['order']  # Important for correct initial ordering
