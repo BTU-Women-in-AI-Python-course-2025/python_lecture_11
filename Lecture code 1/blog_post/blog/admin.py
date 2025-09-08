@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blog.models import BlogPost, BlogPostImage, Author, BannerImage
+from blog.models import BlogPost, BlogPostImage, BannerImage
 from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 
 
@@ -8,19 +8,25 @@ class BannerImageAdmin(admin.ModelAdmin):
     raw_id_fields = ('blog_post',)
 
 
-@admin.register(Author)
-class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'age')
+# @admin.register(Author)
+# class AuthorAdmin(admin.ModelAdmin):
+#     list_display = ('full_name', 'age')
+
+
+class MembershipInline(admin.TabularInline):
+    model = BlogPost.authors.through
+    extra = 1
 
 
 class BlogPostImageInline(SortableInlineAdminMixin, admin.StackedInline):
     model = BlogPostImage
-    extra = 1
+    extra = 7
+    max_num = 5
     ordering = ['order']
 
 
 class BlogPostAdmin(SortableAdminMixin, admin.ModelAdmin):
-    inlines = [BlogPostImageInline]
+    inlines = [MembershipInline, BlogPostImageInline]
     list_display = ('title', 'active', 'deleted')
     list_filter = ('active', 'deleted')
     search_fields = ('title',)
