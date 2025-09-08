@@ -1,5 +1,7 @@
 from django.contrib import admin
-from blog.models import BlogPost, BlogPostImage, BannerImage
+from nested_admin.nested import NestedTabularInline, NestedModelAdmin
+
+from blog.models import BlogPost, BlogPostImage, BannerImage, BlogPostImageDescription
 from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 
 
@@ -17,16 +19,26 @@ class MembershipInline(admin.TabularInline):
     model = BlogPost.authors.through
     extra = 1
 
+#
+# class BlogPostImageInline(SortableInlineAdminMixin, admin.StackedInline):
+#     model = BlogPostImage
+#     extra = 7
+#     max_num = 5
+#     ordering = ['order']
 
-class BlogPostImageInline(SortableInlineAdminMixin, admin.StackedInline):
+class BlogPostImageDescriptionInline(NestedTabularInline):
+    model = BlogPostImageDescription
+    extra = 1
+
+class BlogPostImageInline(NestedTabularInline):
     model = BlogPostImage
-    extra = 7
-    max_num = 5
-    ordering = ['order']
+    inlines = [BlogPostImageDescriptionInline]
+    extra = 1
 
 
-class BlogPostAdmin(SortableAdminMixin, admin.ModelAdmin):
-    inlines = [MembershipInline, BlogPostImageInline]
+class BlogPostAdmin(SortableAdminMixin, NestedModelAdmin):
+    # inlines = [MembershipInline, BlogPostImageInline]
+    inlines = [BlogPostImageInline]
     list_display = ('title', 'active', 'deleted')
     list_filter = ('active', 'deleted')
     search_fields = ('title',)

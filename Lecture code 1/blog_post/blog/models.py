@@ -91,3 +91,20 @@ class BlogPostImage(models.Model):
 
     def __str__(self):
         return f'{self.blog_post.title} - {self.id} image'
+
+
+class BlogPostImageDescription(models.Model):
+    blog_post_image = models.ForeignKey(
+        to='blog.BlogPostImage',
+        on_delete=models.CASCADE,
+        related_name='descriptions',
+        verbose_name='Blog Post Image'
+    )
+    text = models.TextField(verbose_name='Text')
+
+    class Meta:
+        verbose_name = "Blog Post Image Description"
+        verbose_name_plural = "Blog Post Image  Descriptions"
+
+    def __str__(self):
+        return f'{self.blog_post_image.blog_post.title} - {self.id} image'

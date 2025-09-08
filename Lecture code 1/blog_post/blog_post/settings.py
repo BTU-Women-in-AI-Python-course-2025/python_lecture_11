@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'adminsortable2',
+    'nested_admin',
 
     'blog'
 ]
