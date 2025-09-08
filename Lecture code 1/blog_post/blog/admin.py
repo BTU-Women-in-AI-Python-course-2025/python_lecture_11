@@ -1,5 +1,6 @@
 from django.contrib import admin
 from blog.models import BlogPost, BlogPostImage, Author, BannerImage
+from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 
 
 @admin.register(BannerImage)
@@ -12,20 +13,21 @@ class AuthorAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'age')
 
 
-class BlogPostImageInline(admin.TabularInline):
+class BlogPostImageInline(SortableInlineAdminMixin, admin.StackedInline):
     model = BlogPostImage
     extra = 1
+    ordering = ['order']
 
 
-class BlogPostAdmin(admin.ModelAdmin):
+class BlogPostAdmin(SortableAdminMixin, admin.ModelAdmin):
     inlines = [BlogPostImageInline]
     list_display = ('title', 'active', 'deleted')
     list_filter = ('active', 'deleted')
     search_fields = ('title',)
-    ordering = ('-create_date',)
+    # ordering = ('order',)
     date_hierarchy = 'create_date'
     # list_per_page = 1
-    # fields = ('title', 'active', 'deleted')
+    # fields = ('title', 'active', 'deleted', 'order')
     # exclude = ('title',)
     # filter_vertical = ('authors',)
     filter_horizontal = ('authors',)

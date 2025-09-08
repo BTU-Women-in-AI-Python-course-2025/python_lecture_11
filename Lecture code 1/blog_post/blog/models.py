@@ -44,6 +44,7 @@ class BlogPost(models.Model):
     website = models.URLField(verbose_name='ვებ მისამართი', null=True)
     document = models.FileField(upload_to='blog_document/', null=True, blank=True)
     deleted = models.BooleanField(verbose_name='წაშლილია', default=False)
+    order = models.PositiveIntegerField(default=0)
 
     def get_images(self):
         return BlogPostImage.objects.filter(blog_post=self.id)
@@ -51,7 +52,7 @@ class BlogPost(models.Model):
     class Meta:
         verbose_name = "Blog Post"
         verbose_name_plural = "Blog Posts"
-        ordering = ['title']
+        ordering = ['order']
         unique_together = [['title', 'text']]
 
     def __str__(self):
@@ -81,10 +82,12 @@ class BlogPostImage(models.Model):
         on_delete=models.CASCADE
     )
     image = models.ImageField(upload_to='blog_image/')
+    order = models.PositiveIntegerField(default=0)
 
     class Meta:
         verbose_name = "Blog Post Image"
         verbose_name_plural = "Blog Post Images"
+        ordering = ['order']
 
     def __str__(self):
         return f'{self.blog_post.title} - {self.id} image'
