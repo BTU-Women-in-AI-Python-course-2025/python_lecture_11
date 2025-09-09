@@ -2,8 +2,9 @@ from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 from django.http import HttpResponse
 from import_export.admin import ImportExportModelAdmin
+from nested_admin.nested import NestedTabularInline, NestedModelAdmin
 
-from blog.models import BlogPost, BlogPostImage, Author
+from blog.models import BlogPost, BlogPostImage, Author, BlogPostImageDescription
 from blog.resources import BlogPostResource, AuthorResource
 
 
@@ -25,9 +26,9 @@ class AuthorAdmin(ImportExportModelAdmin):
         return response
 
 
-class BlogPostImageInline(SortableInlineAdminMixin, admin.TabularInline):
-    model = BlogPostImage
-    extra = 1
+# class BlogPostImageInline(SortableInlineAdminMixin, admin.TabularInline):
+#     model = BlogPostImage
+#     extra = 1
 
 
 # class BlogPostAdmin(SortableAdminMixin, admin.ModelAdmin):
@@ -51,7 +52,17 @@ class BlogPostImageInline(SortableInlineAdminMixin, admin.TabularInline):
 #     #     })
 #     # )
 
-class BlogPostAdmin(ImportExportModelAdmin, SortableAdminMixin):
+
+class BlogPostImageDescriptionInline(NestedTabularInline):
+    model = BlogPostImageDescription
+    extra = 1
+
+class BlogPostImageInline(NestedTabularInline):
+    model = BlogPostImage
+    inlines = [BlogPostImageDescriptionInline]
+    extra = 1
+
+class BlogPostAdmin(ImportExportModelAdmin, NestedModelAdmin):
     resource_class = BlogPostResource
     inlines = [BlogPostImageInline]
     list_display = ('title', 'is_active', 'created_at')
