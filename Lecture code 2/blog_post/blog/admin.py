@@ -1,8 +1,5 @@
 from django.contrib import admin
-from blog.models import BlogPost, BlogPostImage, Author, BlogPostCover
-
-
-admin.site.register(BlogPostCover)
+from blog.models import BlogPost, BlogPostImage, Author
 
 
 @admin.register(Author)
