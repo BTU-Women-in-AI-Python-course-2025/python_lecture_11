@@ -1,5 +1,6 @@
 from datetime import date
 from django.db import models
+from django.utils.text import slugify
 
 
 class Author(models.Model):
@@ -38,6 +39,7 @@ class BlogPostAuthorThroughTable(models.Model):
 
 
 class BlogPost(models.Model):
+    slug = models.SlugField(verbose_name='Slug', unique=True, blank=True)
     title = models.CharField(verbose_name='სათაური', max_length=255)
     text = models.TextField(verbose_name='ტექსტი')
     is_active = models.BooleanField(verbose_name='აქტიურია', default=True)
@@ -58,6 +60,11 @@ class BlogPost(models.Model):
         verbose_name='Authors 2',
         through='BlogPostAuthorThroughTable',
     )
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
     def get_images(self):
         return self.images.all()
