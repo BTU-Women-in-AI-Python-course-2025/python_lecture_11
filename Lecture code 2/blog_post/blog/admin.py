@@ -1,12 +1,22 @@
 from django.contrib import admin
 from blog.models import BlogPost, BlogPostImage, Author, BlogPostCover
 
-admin.site.register(BlogPostImage)
-admin.site.register(Author)
+
 admin.site.register(BlogPostCover)
 
 
+@admin.register(Author)
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'age')
+
+
+class BlogPostImageInline(admin.TabularInline):
+    model = BlogPostImage
+    extra = 1
+
+
 class BlogPostAdmin(admin.ModelAdmin):
+    inlines = [BlogPostImageInline]
     list_display = ('title', 'is_active', 'created_at')
     list_filter = ('is_active', 'authors')
     search_fields = ('title',)

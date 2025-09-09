@@ -10,6 +10,10 @@ class Author(models.Model):
     birth_date = models.DateField(verbose_name='Birth date', null=True)
 
     @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
+    @property
     def age(self) -> int:
         today = date.today()
         return today.year - self.birth_date.year - (
